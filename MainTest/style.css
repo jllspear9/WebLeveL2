@@ -5,6 +5,14 @@
 
 body{
     background-color: #595959;
+    height: 100%;
+    width: auto;
+    align: center;
+    padding: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 /*--------------Generics-------------*/
 .customBorder{
@@ -26,17 +34,18 @@ body{
 fieldset{
     height: min-content;
     width: min-content;
-    margin: auto;
+    margin: 120px auto;
     background-color: rgb(166, 166, 166);
-
+    position: relative;
 }
 legend{
     background-color: skyblue;
-    margin: inherit;
+    margin: auto;
+
 }
 h1{
     position:relative;
-    padding: 0;
+    padding: auto;
     margin: auto;
     width: min-content;
     height: min-content;
