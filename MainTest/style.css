@@ -1,0 +1,65 @@
+
+*{
+    font-family:'Comic Sans MS';
+}
+
+body{
+    background-color: #595959;
+}
+/*--------------Generics-------------*/
+.customBorder{
+    padding: 2%;
+    border: black 5px solid;
+    border-radius: 9px;
+    position: relative;    
+}
+/*audessurlignement*/
+.upperline{
+    text-decoration: overline black ;
+}
+
+
+/*-----------------------------------*/
+
+/*--------------General----------------*/
+
+fieldset{
+    height: min-content;
+    width: min-content;
+    margin: auto;
+    background-color: rgb(166, 166, 166);
+
+}
+legend{
+    background-color: skyblue;
+    margin: inherit;
+}
+h1{
+    position:relative;
+    padding: 0;
+    margin: auto;
+    width: min-content;
+    height: min-content;
+    /*
+    background: linear-gradient(side, left, mid,... steps colored, end_colored);
+    */
+    background: linear-gradient(to right, skyblue 0%, blue 20%, #000000 100%);
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+}
+input[type=submit]{
+    background-color: #ff000041;
+    margin: auto;
+    position: relative;
+}
+
+/*-------- specific --------*/
+.champsIn{
+    width: max-content;
+    height: min-content;
+    margin: auto;
+    position: relative;
+}
+
+/*end page*/
