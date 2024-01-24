@@ -10,22 +10,23 @@
     <!-- conteneur de saisie de l'utilisateur -->
         <!-- bloc formulaire avec légende sur le bord -->
         <fieldset class="customBorder">
-            <legend  class="customBorder"><h1 class="customBorder">Register</h1></legend>
+            <legend  class="customBorder"><h1 class="customBorder">Registration</h1></legend>
             <!-- formulaire de saisie -->
             <form action="./affichange.php" method="POST" id="formulaire">
                 <!-- champs de saisie -->
                 name
-                <input class="champsIn" type="text" name="txtname"      id="name"     placeholder="name" required>
+                <input class="champsIn" type="text" name="txtname"      id="name"     placeholder="enter text" require>
                 surname
-                <input class="champsIn" type="text" name="txtsurname"   id="surname"  placeholder="surname" required>
+                <input class="champsIn" type="text" name="txtsurname"   id="surname"  placeholder="enter text" required>
                 age
-                <input class="champsIn" type="text" name="txtage"       id="age"      placeholder="age" required>  
+                <input class="champsIn" type="text" name="txtage"       id="age"      placeholder="enter number" required>  
                 password
-                <input class="champsIn" type="text" name="txtpassword"  id="password" placeholder="password" required>
+                <input class="champsIn" type="text" name="txtpassword"  id="password" placeholder="enter text" required>
                 address
-                <input class="champsIn" type="text" name="txtaddress"   id="address"  placeholder="address" required>  
+                <input class="champsIn" type="text" name="txtaddress"   id="address"  placeholder="enter text" required>  
                 <br><br>
-                <input class="champsIn customBorder" type="submit" name="send" id="send"> 
+                <input class="champsIn customBorder" type="submit" name="send" id="send" value="send"
+                onclick="document.getElementById('formulaire').reset(); return false;"> 
             </form>
         </fieldset>
     
