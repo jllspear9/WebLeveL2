@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css"/>
-    <title class="upperline">testLevel2 - register</title>
+    <title class="upperline">testLevel2 - registration</title>
 </head>
 <body>
     <!-- conteneur de saisie de l'utilisateur -->
         <!-- bloc formulaire avec légende sur le bord -->
         <fieldset class="customBorder">
-            <legend  class="customBorder"><h1 class="customBorder">Registration</h1></legend>
+            <legend  class="customBorder"><h1>Registration</h1></legend>
             <!-- formulaire de saisie -->
             <form action="./affichange.php" method="POST" id="formulaire">
                 <!-- champs de saisie -->
