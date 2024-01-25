@@ -12,8 +12,9 @@
 <?php
 // PDO statement 
 // local uwamp server
+$tuples=new PDO("add");
 
-
+// while to range
 
 
 ?>
