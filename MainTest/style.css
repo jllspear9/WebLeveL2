@@ -52,7 +52,7 @@ h1{
     /*
     background: linear-gradient(side, left, mid,... steps colored, end_colored);
     */
-    background: linear-gradient(to right, skyblue 0%, blue 20%, #000000 100%);
+    background: linear-gradient(to right, skyblue 0%, blue 10%, #000000 100%);
     background-clip: text;
     -webkit-text-fill-color: transparent;
     
