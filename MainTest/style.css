@@ -5,17 +5,13 @@
 
 body{
     background-color: #595959;
-    height: 100%;
+    height: auto;
     width: auto;
-    align: center;
-    padding: auto;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    top: 0px;
 }
 /*--------------Generics-------------*/
-.customBorder{
+/*custom border*/
+input, fieldset, legend{
     padding: 2%;
     border: black 5px solid;
     border-radius: 9px;
@@ -34,14 +30,29 @@ body{
 fieldset{
     height: min-content;
     width: min-content;
-    margin: 120px auto;
-    background-color: rgb(166, 166, 166);
+    margin: 10% auto 0 auto;
+    background-color: #a6a6a6;
     position: relative;
+    padding-bottom: none;
 }
 legend{
     background-color: skyblue;
-    margin: auto;
-
+    margin: 0px auto;
+    width: min-content;
+    height: min-content;
+    padding: 10px;
+}
+form{
+    height: min-content;
+    width: min-content;
+    margin: 10px;
+    padding: 0px;
+    justify-content: center;
+    /* centrage des éléments */
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+    flex-direction: column;    
 }
 h1{
     position:relative;
@@ -57,10 +68,12 @@ h1{
     -webkit-text-fill-color: transparent;
     
 }
-input[type=submit]{
-    background-color: #ff000041;
-    margin: auto;
-    position: relative;
+input[type=text]{
+    width: max-content;
+    height: min-content;
+    margin: 6px auto;
+    position: relative; 
+    padding: 5px;   
 }
 
 /*-------- specific --------*/
@@ -69,6 +82,26 @@ input[type=submit]{
     height: min-content;
     margin: auto;
     position: relative;
+    display: block;
+    display: flex;
 }
+
+input[type=submit]{
+    background-color: #ff000041;
+    margin: 20px auto 0 auto;
+    width: 60px;
+}
+
+.navL{
+    float: left;
+    left: 0px;
+    top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;    
+    flex-direction: column;   
+}
+
+/* ----------------------- */
 
 /*end page*/
