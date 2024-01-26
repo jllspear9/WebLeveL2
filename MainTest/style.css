@@ -21,7 +21,17 @@ input, fieldset, legend{
 .upperline{
     text-decoration: overline black ;
 }
-
+/* custom out line table style*/
+.table th, table{
+    outline: solid black 3px;
+    padding: 3px;
+    margin: auto;  
+    background-color: #c4c4c4;
+    border-radius: 5px;
+}
+.table th{
+    margin: 30px;    
+}
 
 /*-----------------------------------*/
 
@@ -68,6 +78,12 @@ h1{
     -webkit-text-fill-color: transparent;
     
 }
+.table *{
+    outline: black 3px solid;
+}
+
+
+
 input[type=text]{
     width: max-content;
     height: min-content;
