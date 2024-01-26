@@ -17,7 +17,6 @@
     <a href="./affichange.php">affichange basique</a>
     <a href="./inscription.php">inscription basique</a>
     <a href="./preparedaffichange.php"> affichange préparé</a>
-    <a href="./preparedInscription.php">inscription préparée</a>
 </nav> 
 </body>
 </html>
