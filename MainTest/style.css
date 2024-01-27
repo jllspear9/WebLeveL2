@@ -82,6 +82,11 @@ h1{
     outline: black 3px solid;
 }
 
+caption{
+    padding: 10px;
+    caption-side: top;
+}
+
 
 
 input[type=text]{
@@ -117,7 +122,16 @@ input[type=submit]{
     justify-content: center;    
     flex-direction: column;   
 }
-
+/* intervertir les couleurs des lignes avec php */
+.line0{
+    background-color: #c4c4c4;
+}
+.line1{
+    background-color: #8b8b8b;
+}
+table .line1 td, table .line0 td{
+    padding: 5px;
+}
 /* ----------------------- */
 
 /*end page*/
