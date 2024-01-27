@@ -47,7 +47,19 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
                     $date=$_REQUEST["lstDate"];
                     $horaire=$_REQUEST["lstHoraireDep"];
                     $identificateur=$_REQUEST["txtIdentificationNum"];        
-            
+
+                    // $ordreSQLDep="SELECT nomLieu FROM lieu WHERE numLieu = :prepSQL";
+                    // echo $lieuDep."\n".$ordreSQLDep.'<br>';
+                    // // préparation de la requete
+                    // $prepared=$laConnexion()->prepare($ordreSQLDep);                 
+                    // // associe les données a une variable
+                    // $rpreparedDEP->bindParam(":prepSQL", $lieuDep); 
+                    // $rpreparedDEP->execute(); // exec la requete
+                    // $LieuDepart=$rpreparedDEP->fetch(); // récupère les données 
+                    // $resultDepart=$LieuDepart["nomLieu"];  
+                    
+
+
                     $ordreSQLDep="SELECT nomLieu FROM lieu WHERE numLieu=$lieuDep";
                     $resultDep = $laConnexion->query($ordreSQLDep);
                     $LieuDepart=$resultDep->fetch();
@@ -66,7 +78,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
                     $leTupleIdUtil=$resultIdUtil->fetch();
                     $IdUtil=$leTupleIdUtil["numUtil"];
            
+                    // risque de sécurité / nb de trajets
+                    // problème codé par les L1 il peut y avoir une insertions correcte
+                    // mais une mauvaise réservation donc ça risque d'ajouter plusieurs
+                    // voyage pour la même personne avec un autre numéro de téléphone
 
+                    /*
+                    on cherche si le trajet existe déja si c'est pas le cas on l'ajoute
+                    sinon on ne l'ajoute pas
+                    --> modifier le if
+                    */
                     $nb=$laConnexion->exec($ordreSQLTraj);
                     if($nb==0){
                         echo "Il y a eu une erreur";
