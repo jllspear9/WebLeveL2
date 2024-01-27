@@ -30,10 +30,6 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
             </div>            
                 
             <div class="col-xs-12 col-md-4 col-lg-2">
-                <a href='./identificationChauffeur.php' class="btn btn-secondary rounded-pill px-3 mt-2" role="button">Chauffeur</a>
-            </div>
-                
-            <div class="col-xs-12 col-md-4 col-lg-2">
                 <a href='https://www.univ-pau.fr/fr/index.html#accesDirects' class="btn btn-secondary rounded-pill px-3 mt-2" role="button">Site de l'UPPA</a>
             </div>
         </div>

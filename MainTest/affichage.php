@@ -91,8 +91,6 @@
         ?>
     </table>
 
-
-
     <nav class="navL">
             <a href="./inscription.php">inscription basique</a>
             <a href="./preparedaffichange.php"> affichange préparé</a>
