@@ -1,0 +1,21 @@
+body{
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+
+#centre{
+    height: 300px;
+}
+
+
+.logo{
+    width: 200px;
+    height: 50px;
+}
+
+button a{
+    color: white;
+}
+
+
