@@ -48,23 +48,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
                     $horaire=$_REQUEST["lstHoraireDep"];
                     $identificateur=$_REQUEST["txtIdentificationNum"];        
 
-                    $ordreSQLDep='SELECT nomLieu FROM lieu WHERE numLieu = ?';
-                    // préparation de la requete
-                    $prepared=$laConnexion()->prepare($ordreSQLDep);                 
-                    // associe les données a une variable
-                    $rpreparedDEP->bindParam(':prepSQL', $lieuDep); 
-                    $rpreparedDEP->execute(["$lieuDep"]); // exec la requete
-                    $LieuDepart=$rpreparedDEP->fetchAll(PDO::FETCH_ASSOC); // récupère les données 
-                    var_dump($LieuDepart); // affichange simple
-                    // $resultDepart=$LieuDepart["nomLieu"];  
-                    
+                    // requete préparée
+                    $rSQL = "SELECT nomLieu FROM lieu WHERE numLieu = :nlieu";
+                    $requete = $laConnexion->prepare($rSQL);
+                    $requete->bindParam(':nlieu', $$lieuDep);
+                    $requete->execute();
+                    $stmt = $requete->fetch();
+                    $resultDepart=$stmt["nomLieu"];
 
-
-                    // $ordreSQLDep="SELECT nomLieu FROM lieu WHERE numLieu=$lieuDep";
-                    // $resultDep = $laConnexion->query($ordreSQLDep);
-                    // $LieuDepart=$resultDep->fetch();
-                    // $resultDepart=$LieuDepart["nomLieu"];
-            
                     $ordreSQLArr="SELECT nomLieu FROM lieu WHERE numLieu=$lieuArr";
                     $resultArr=$laConnexion->query($ordreSQLArr);
                     $LieuArrivee=$resultArr->fetch();
