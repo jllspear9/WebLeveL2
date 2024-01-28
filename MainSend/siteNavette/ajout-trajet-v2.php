@@ -45,55 +45,67 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
                     $lieuDep=$_REQUEST["lstLieuDep"];
                     $lieuArr=$_REQUEST["lstLieuArr"];
                     $date=$_REQUEST["lstDate"];
-                    $horaire=$_REQUEST["lstHoraireDep"];
-                    $numTel=$_REQUEST["txtIdentificationNum"];        
+                    $horaire=$_REQUEST["lstHoraireDep"];      
                     //informations texte utilisateur (nécessite des requetes préparées)
                     $userAddr=$_REQUEST["txtuseraddr"];
                     $userpwd=$_REQUEST["txtpwd"];
 
-                    // vérification si compte présent avec préparation
-                    $rSQL = "SELECT numUtil FROM utilisateur WHERE email = :SQLmail AND pwdUtil = :SQLpwd";
+                    // vérification si le compte est présent avec une préparation
+                    $rSQL = "SELECT numUtil FROM utilisateur WHERE email = :SQLmail AND mdpUtil = :SQLpwd";
                     $requete = $laConnexion->prepare($rSQL);
                     $requete->bindParam(':SQLmail', $userAddr);
                     $requete->bindParam(':SQLpwd', $userpwd);                    
                     $requete->execute();
                     $stmt = $requete->fetch();
-                    $resultNom=$stmt["prenomUtil"]; // le prenom doit pas être null
-                    if($resultNom != NULL){
-                        // on vérifie si les données n'ont pas déja étés saisie
+                    $resultNum=$stmt["numUtil"]; // l'id doit pas être null
+
+                    if($resultNum != NULL){
+                        // on vérifie si les données n'ont pas déja étés saisie 
+                        // préparation déja faite
+                        // on doit passer par la table reserver pour recupérer le numéro du trajet 
+                        // 'numTrajet' a cause des contraintes d'intégrités puis on cherche dans la table
+                        // trajet
+
+                        // attention il faut rajouter des select si on rajoute des tables
+                        // attention il faut rajouter beaucoup de lignes si on 
+                        // rajoute une heure d'arrivée a la table trajet
+                        $verifUnique="SELECT dateTrajet, lieuDepart, lieuArrivee, horaireDepart, horaireArrivee FROM utilisateur 
+                        INNER JOIN reserver ON utilisateur.numUtil = reserver.numUtil 
+                        INNER JOIN trajet ON reserver.numTrajet = reserver.numTrajet
+                        WHERE utilisateur.numUtil=$resultNum AND (trajet.horaireDepart = $horaire)";
+                        
+                        $rowVerifUnique=$laConnexion->query($verifUnique);
 
 
-                        $ordreSQLTraj="INSERT INTO trajet (dateTrajet, lieuDepart, lieuArrivee, horaireDepart)
-                                VALUES ('$date', '$lieuDep', '$lieuArr', '$horaire')"; 
-                        $nb=$laConnexion->exec($ordreSQLTraj);
-                        if($nb==0){
-                            echo "Il y a eu une erreur dans l'insertions des données";
-                        }else{
-                            $idDernierTrajet = $laConnexion->lastInsertId();
-                            echo "<p>votre trajet a bien été ajouté</p>";
+                        echo "rowverifunique = $rowVerifUnique<br>rsql $resultNum";
+                        if ($rowVerifUnique==0){
+                            $ordreSQLTraj="INSERT INTO trajet (dateTrajet, lieuDepart, lieuArrivee, horaireDepart)
+                                    VALUES ('$date', '$lieuDep', '$lieuArr', '$horaire')"; 
+                            $nb=$laConnexion->exec($ordreSQLTraj);
+                            if($nb==0){
+                                echo "Il y a eu une erreur dans l'insertions des données";
+                            }else{
+                                $idDernierTrajet = $laConnexion->lastInsertId();
+                                echo "<p>votre trajet a bien été ajouté</p>";
+                            }        
+                            $ordreSQLReserver="INSERT INTO reserver (numUtil, numTrajet) VALUE ($resultNum, $idDernierTrajet)";
+                            $laConnexion->exec($ordreSQLReserver);  
+                        } else { // explicit
+                            echo "<p>vous ne pouvez pas choisir deux trajets au même moment</p>";
+                       
                         }
-                        // on récupère l'id de la personne en utilisant ses coordonées
-                        $ordreSQLRecupIdUtil="SELECT numUtil FROM utilisateur WHERE telPortable='$numTel'";
-                        $resultIdUtil=$laConnexion->query($ordreSQLRecupIdUtil);
-                        $leTupleIdUtil=$resultIdUtil->fetch();
-                        $IdUtil=$leTupleIdUtil["numUtil"];          
-
-                        $ordreSQLReserver="INSERT INTO reserver (numUtil, numTrajet) VALUE ($IdUtil, $idDernierTrajet)";
-                        $nb2=$laConnexion->exec($ordreSQLReserver);
-                        if($nb2==0){
-                            echo "les coordonnées saisies n'existent pas vous devriez créer un compte";
-                        }                        
-
-
                     } else {
                         echo "<p>le compte en question n'existe pas</p>";
                     }                        
 
-           
+
 
 
                 ?>
-            </div>
+                <script>
+                    console.log(<?php echo $rowVerifUnique ?>)
+                </script>
+            </div>       
         </div>            
     </div>
 </body>
