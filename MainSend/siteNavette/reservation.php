@@ -114,8 +114,15 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
             </table>  
         </div>
         <div class="row">
-            <p class="mt-2 ml-4">Entrer Votre numéro de téléphone :<input type="text" name="txtIdentificationNum"/></p>
-            <p class="mt-2 ml-4"><input type="submit"></p>
+            <p class="mt-2 ml-4">
+                <input type="text" name="txtuseraddr" placeholder="addresse postale"/>
+            </p><br>
+            <p class="mt-2 ml-4">
+                <input type="password" name="txtpwd" placeholder="mot de passe"/>
+            </p>          
+            <p class="mt-2 ml-4">
+                <input type="submit">
+            </p>
         </div>
         </form>
         <br><h5>Nombre de places : </h5>
