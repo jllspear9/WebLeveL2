@@ -41,57 +41,57 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
             <div class="col">
                 <?php
                     include_once("Connexion.php");
-       
+                    // données des formulaires liste déroulante (ne nécessite pas de prépapration sql)
                     $lieuDep=$_REQUEST["lstLieuDep"];
                     $lieuArr=$_REQUEST["lstLieuArr"];
                     $date=$_REQUEST["lstDate"];
                     $horaire=$_REQUEST["lstHoraireDep"];
-                    $identificateur=$_REQUEST["txtIdentificationNum"];        
+                    $numTel=$_REQUEST["txtIdentificationNum"];        
+                    //informations texte utilisateur (nécessite des requetes préparées)
+                    $userAddr=$_REQUEST["txtuseraddr"];
+                    $userpwd=$_REQUEST["txtpwd"];
 
-                    // requete préparée
-                    $rSQL = "SELECT nomLieu FROM lieu WHERE numLieu = :nlieu";
+                    // vérification si compte présent avec préparation
+                    $rSQL = "SELECT numUtil FROM utilisateur WHERE email = :SQLmail AND pwdUtil = :SQLpwd";
                     $requete = $laConnexion->prepare($rSQL);
-                    $requete->bindParam(':nlieu', $$lieuDep);
+                    $requete->bindParam(':SQLmail', $userAddr);
+                    $requete->bindParam(':SQLpwd', $userpwd);                    
                     $requete->execute();
                     $stmt = $requete->fetch();
-                    $resultDepart=$stmt["nomLieu"];
+                    $resultNom=$stmt["prenomUtil"]; // le prenom doit pas être null
+                    if($resultNom != NULL){
+                        // on vérifie si les données n'ont pas déja étés saisie
 
-                    $ordreSQLArr="SELECT nomLieu FROM lieu WHERE numLieu=$lieuArr";
-                    $resultArr=$laConnexion->query($ordreSQLArr);
-                    $LieuArrivee=$resultArr->fetch();
-                    $resultArrivee=$LieuArrivee["nomLieu"];
-                
-                    $ordreSQLTraj="INSERT INTO trajet (dateTrajet, lieuDepart, lieuArrivee, horaireDepart)
-                                   VALUES ('$date', '$resultDepart', '$resultArrivee', '$horaire')";
-            
-                    $ordreSQLRecupIdUtil="SELECT numUtil FROM utilisateur WHERE telPortable='$identificateur'";
-                    $resultIdUtil=$laConnexion->query($ordreSQLRecupIdUtil);
-                    $leTupleIdUtil=$resultIdUtil->fetch();
-                    $IdUtil=$leTupleIdUtil["numUtil"];
+
+                        $ordreSQLTraj="INSERT INTO trajet (dateTrajet, lieuDepart, lieuArrivee, horaireDepart)
+                                VALUES ('$date', '$lieuDep', '$lieuArr', '$horaire')"; 
+                        $nb=$laConnexion->exec($ordreSQLTraj);
+                        if($nb==0){
+                            echo "Il y a eu une erreur dans l'insertions des données";
+                        }else{
+                            $idDernierTrajet = $laConnexion->lastInsertId();
+                            echo "<p>votre trajet a bien été ajouté</p>";
+                        }
+                        // on récupère l'id de la personne en utilisant ses coordonées
+                        $ordreSQLRecupIdUtil="SELECT numUtil FROM utilisateur WHERE telPortable='$numTel'";
+                        $resultIdUtil=$laConnexion->query($ordreSQLRecupIdUtil);
+                        $leTupleIdUtil=$resultIdUtil->fetch();
+                        $IdUtil=$leTupleIdUtil["numUtil"];          
+
+                        $ordreSQLReserver="INSERT INTO reserver (numUtil, numTrajet) VALUE ($IdUtil, $idDernierTrajet)";
+                        $nb2=$laConnexion->exec($ordreSQLReserver);
+                        if($nb2==0){
+                            echo "les coordonnées saisies n'existent pas vous devriez créer un compte";
+                        }                        
+
+
+                    } else {
+                        echo "<p>le compte en question n'existe pas</p>";
+                    }                        
+
            
-                    // risque de sécurité / nb de trajets
-                    // problème codé par les L1 il peut y avoir une insertions correcte
-                    // mais une mauvaise réservation donc ça risque d'ajouter plusieurs
-                    // voyage pour la même personne avec un autre numéro de téléphone
 
-                    /*
-                    on cherche si le trajet existe déja si c'est pas le cas on l'ajoute
-                    sinon on ne l'ajoute pas
-                    --> modifier le if
-                    */
-                    $nb=$laConnexion->exec($ordreSQLTraj);
-                    if($nb==0){
-                        echo "Il y a eu une erreur";
-                    }else{
-                        $idDernierTrajet = $laConnexion->lastInsertId();
-                        echo "<p>votre trajet a bien été ajouté</p>";
-                    }
-            
-                    $ordreSQLReserver="INSERT INTO reserver (numUtil, numTrajet) VALUE ($IdUtil, $idDernierTrajet)";
-                    $nb2=$laConnexion->exec($ordreSQLReserver);
-                    if($nb2==0){
-                        echo "Oups...Il y a eu une erreur";
-                    }
+
                 ?>
             </div>
         </div>            
