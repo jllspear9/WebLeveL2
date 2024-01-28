@@ -28,10 +28,10 @@ USE `navette`;
 --
 -- Structure de la table `calendrier`
 --
-
+DROP TABLE IF EXISTS `calendrier`;
 CREATE TABLE `calendrier` (
   `date` date NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `calendrier`
@@ -53,10 +53,10 @@ INSERT INTO `calendrier` (`date`) VALUES
 --
 -- Structure de la table `horaire`
 --
-
+DROP TABLE IF EXISTS `horaire`;
 CREATE TABLE `horaire` (
   `horaireDep` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `horaire`
@@ -73,11 +73,11 @@ INSERT INTO `horaire` (`horaireDep`) VALUES
 --
 -- Structure de la table `lieu`
 --
-
+DROP TABLE IF EXISTS `lieu`;
 CREATE TABLE `lieu` (
   `numLieu` bigint(20) NOT NULL,
   `nomLieu` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `lieu`
@@ -96,7 +96,7 @@ INSERT INTO `lieu` (`numLieu`, `nomLieu`) VALUES
 --
 -- Structure de la table `reserver`
 --
-
+DROP TABLE IF EXISTS `reserver`;
 CREATE TABLE `reserver` (
   `numUtil` bigint(20) NOT NULL,
   `numTrajet` bigint(20) NOT NULL
@@ -114,14 +114,14 @@ INSERT INTO `reserver` (`numUtil`, `numTrajet`) VALUES
 --
 -- Structure de la table `trajet`
 --
-
+DROP TABLE IF EXISTS `trajet`;
 CREATE TABLE `trajet` (
   `numTrajet` bigint(20) NOT NULL,
   `dateTrajet` date NOT NULL,
   `lieuDepart` varchar(50) NOT NULL,
   `lieuArrivee` varchar(50) NOT NULL,
   `horaireDepart` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `trajet`
@@ -135,7 +135,7 @@ INSERT INTO `trajet` (`numTrajet`, `dateTrajet`, `lieuDepart`, `lieuArrivee`, `h
 --
 -- Structure de la table `utilisateur`
 --
-
+DROP TABLE IF EXISTS `utilisateur`;
 CREATE TABLE `utilisateur` (
   `numUtil` bigint(20) NOT NULL,
   `loginUtil` varchar(50) NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE `utilisateur` (
   `telPortable` varchar(10) NOT NULL,
   `email` varchar(50) NOT NULL,
   `typeUtil` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Déchargement des données de la table `utilisateur`
