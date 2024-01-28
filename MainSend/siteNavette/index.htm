@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Navette UPPA page d'accueil</title>
-	<meta  charset="utf-8" />
+	<title>Calcul RFM</title>
+	<meta charset="utf-8" />
 	<link href="./style/style.css" rel="stylesheet" type="text/css"/>
-        <link href="./style/bootstrap.min.css" type="text/css" rel="stylesheet"/>
+    <link href="./style/bootstrap.min.css" type="text/css" rel="stylesheet"/>
 </head>
 <body>
-    <div class="conteiner-fluid">
+    <div class="container-fluid">
         <div class="row" id="navbar">
             <div class="col-xs-12 col-md-4 col-lg-2 mt-2">
                 <a href='./index.htm' class="mt-2"><img src="./images/logoUPPA-RepFr.png" alt="Logo UPPA" class="logo ml-4"/></a>
@@ -29,32 +29,46 @@
                 <a href='https://www.univ-pau.fr/fr/index.html#accesDirects' class="btn btn-secondary rounded-pill px-3 mt-2" role="button">Site de l'UPPA</a>
             </div>
         </div>
-        
-        <div class="row mt-2 ml-2" id="centre">
-            <div class="col-12">  
-                <p class="mt-4">
-                    Afin de réduire son empreinte carbone et faciliter la mobilité entre les différents sites, L’Université de Pau et Pays
-                    de l’Adour a décidé de mettre place une navette régulière et gratuite entre Pau et la côte basque pour son personnel.
-                    Six dates sont actuellement prévues mais le dispositif est destiné à s’étendre sur l’année 2024, tous les mardis et les
-                    jeudis.
-                </p>
-            </div>   
-            
-            <div class="col-12">   
-                
-                    <h3>Fonctionnement de la navette</h3>
-                    Le matin, une navette part à 8h du campus de Pau (parking Cap Sud) et s’arrête 3 fois si nécessaire (aires de
-                    covoiturage de Lescar, Orthez et Ikea). Puis arrêt à Bayonne (campus de la Nive) et terminus à Anglet Montaury.
-                    Arrivée estimée à 9h30-10h.
-                    Une autre navette effectue le trajet inverse en même temps.
-                    Un trajet retour, dans les deux sens, se fait 10 à 15 minutes plus tard, avec une arrivée estimée à 11h30-12h à Pau et
-                    à Bayonne.
-                    En fin de journée, deux navettes circulent sur le même schéma. Départs à 17h et 19h pour des arrivées estimées à
-                    18h30-19h puis 20h30-21h. Une capture d’écran extraite du site Web de l’UPPA présente schématiquement le
-                    fonctionnement de la navette.
-                
-            </div>   
+    
+        <div class="row-fluid">
+            <h3> Création de votre compte </h3>
         </div>
+            
+        <?php
+            include_once("Connexion.php");
+
+            // Récupération des données du formulaire
+            $id = $_REQUEST["txtId"];
+            $mdp = $_REQUEST["txtMDP"];
+            $nom = $_REQUEST["txtNom"];
+            $prenom = $_REQUEST["txtPrenom"];
+            $tel = $_REQUEST["txtTel"];
+            $email = $_REQUEST["txtMail"];
+            $typeUtil = $_REQUEST["typeUtil"];
+            
+            // Préparation de la requête d'insertion
+            $ordreSQL = "INSERT INTO utilisateur (loginUtil, mdpUtil, nomUtil, prenomUtil, telPortable, email, typeUtil) 
+                         VALUES (:id, :mdp, :nom, :prenom, :tel, :email, :typeUtil)";
+            $requete = $laConnexion->prepare($ordreSQL);
+
+            // Liaison des paramètres
+            $requete->bindValue(':id', $id, PDO::PARAM_STR);
+            $requete->bindValue(':mdp', $mdp, PDO::PARAM_STR);
+            $requete->bindValue(':nom', $nom, PDO::PARAM_STR);
+            $requete->bindValue(':prenom', $prenom, PDO::PARAM_STR);
+            $requete->bindValue(':tel', $tel, PDO::PARAM_STR);
+            $requete->bindValue(':email', $email, PDO::PARAM_STR);
+            $requete->bindValue(':typeUtil', $typeUtil, PDO::PARAM_INT);
+
+            // Exécution de la requête
+            $resultat = $requete->execute();
+                
+            if (!$resultat) {
+                echo "Oups, Il y a eu une erreur : " . $requete->errorInfo()[2];
+            } else {
+                echo "Votre compte a bien été ajouté !";
+            }
+        ?>        
     </div>
 </body>
-</html> 
+</html>
