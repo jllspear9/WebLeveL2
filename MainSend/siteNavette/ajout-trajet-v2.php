@@ -40,72 +40,71 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Scripting/EmptyPHPWebPage.php to 
         <div class="row">
             <div class="col">
                 <?php
-                    include_once("Connexion.php");
-                    // données des formulaires liste déroulante (ne nécessite pas de prépapration sql)
-                    $lieuDep=$_REQUEST["lstLieuDep"];
-                    $lieuArr=$_REQUEST["lstLieuArr"];
-                    $date=$_REQUEST["lstDate"];
-                    $horaire=$_REQUEST["lstHoraireDep"];      
-                    //informations texte utilisateur (nécessite des requetes préparées)
-                    $userAddr=$_REQUEST["txtuseraddr"];
-                    $userpwd=$_REQUEST["txtpwd"];
+                   include_once("Connexion.php");
 
-                    // vérification si le compte est présent avec une préparation
-                    $rSQL = "SELECT numUtil FROM utilisateur WHERE email = :SQLmail AND mdpUtil = :SQLpwd";
-                    $requete = $laConnexion->prepare($rSQL);
-                    $requete->bindParam(':SQLmail', $userAddr);
-                    $requete->bindParam(':SQLpwd', $userpwd);                    
-                    $requete->execute();
-                    $stmt = $requete->fetch();
-                    $resultNum=$stmt["numUtil"]; // l'id doit pas être null
+                   $lieuDep = $_REQUEST["lstLieuDep"];
+                   $lieuArr = $_REQUEST["lstLieuArr"];
+                   $date = $_REQUEST["lstDate"];
+                   $horaire = $_REQUEST["lstHoraireDep"];
+                   $identificateur = $_REQUEST["txtIdentificationNum"];
+                   
+                   try {
+                       $laConnexion->beginTransaction();
+                   // Préparation de la requête pour récupérer le nom du lieu de départ
+                   $ordreSQLDep = "SELECT nomLieu FROM lieu WHERE numLieu = :lieuDep";
+                   $requeteDep = $laConnexion->prepare($ordreSQLDep);
+                   $requeteDep->bindValue(':lieuDep', $lieuDep, PDO::PARAM_INT);
+                   $requeteDep->execute();
+                   $resultDep = $requeteDep->fetch();
+                   $resultDepart = $resultDep["nomLieu"];
+                   
+                   // Préparation de la requête pour récupérer le nom du lieu d'arrivée
+                   $ordreSQLArr = "SELECT nomLieu FROM lieu WHERE numLieu = :lieuArr";
+                   $requeteArr = $laConnexion->prepare($ordreSQLArr);
+                   $requeteArr->bindValue(':lieuArr', $lieuArr, PDO::PARAM_INT);
+                   $requeteArr->execute();
+                   $resultArr = $requeteArr->fetch();
+                   $resultArrivee = $resultArr["nomLieu"];
+                   
+                   // Préparation de la requête pour insérer un trajet
+                   $ordreSQLTraj = "INSERT INTO trajet (dateTrajet, lieuDepart, lieuArrivee, horaireDepart)
+                                   VALUES (:date, :resultDepart, :resultArrivee, :horaire)";
+                   $requeteTraj = $laConnexion->prepare($ordreSQLTraj);
+                   $requeteTraj->bindValue(':date', $date, PDO::PARAM_STR);
+                   $requeteTraj->bindValue(':resultDepart', $resultDepart, PDO::PARAM_STR);
+                   $requeteTraj->bindValue(':resultArrivee', $resultArrivee, PDO::PARAM_STR);
+                   $requeteTraj->bindValue(':horaire', $horaire, PDO::PARAM_STR);
+                   $requeteTraj->execute();
+                   
+                   // Récupération de l'id du dernier trajet
+                   $idDernierTrajet = $laConnexion->lastInsertId();
+                   echo "<p>Votre trajet a bien été ajouté</p>";
+                   
+                   // Préparation de la requête pour récupérer l'id de l'utilisateur
+                   $ordreSQLRecupIdUtil = "SELECT numUtil FROM utilisateur WHERE telPortable = :identificateur";
+                   $requeteIdUtil = $laConnexion->prepare($ordreSQLRecupIdUtil);
+                   $requeteIdUtil->bindValue(':identificateur', $identificateur, PDO::PARAM_STR);
+                   $requeteIdUtil->execute();
+                   $leTupleIdUtil = $requeteIdUtil->fetch();
+                   $IdUtil = $leTupleIdUtil["numUtil"];
+                   
+                   // Préparation de la requête pour réserver le trajet
+                   $ordreSQLReserver = "INSERT INTO reserver (numUtil, numTrajet) VALUES (:IdUtil, :idDernierTrajet)";
+                   $requeteReserver = $laConnexion->prepare($ordreSQLReserver);
+                   $requeteReserver->bindValue(':IdUtil', $IdUtil, PDO::PARAM_INT);
+                   $requeteReserver->bindValue(':idDernierTrajet', $idDernierTrajet, PDO::PARAM_INT);
+                   $requeteReserver->execute();
+          
+              
+                       $laConnexion->commit();
 
-                    if($resultNum != NULL){
-                        // on vérifie si les données n'ont pas déja étés saisie 
-                        // préparation déja faite
-                        // on doit passer par la table reserver pour recupérer le numéro du trajet 
-                        // 'numTrajet' a cause des contraintes d'intégrités puis on cherche dans la table
-                        // trajet
-
-                        // attention il faut rajouter des select si on rajoute des tables
-                        // attention il faut rajouter beaucoup de lignes si on 
-                        // rajoute une heure d'arrivée a la table trajet
-                        $verifUnique="SELECT dateTrajet, lieuDepart, lieuArrivee, horaireDepart, horaireArrivee FROM utilisateur 
-                        INNER JOIN reserver ON utilisateur.numUtil = reserver.numUtil 
-                        INNER JOIN trajet ON reserver.numTrajet = reserver.numTrajet
-                        WHERE utilisateur.numUtil=$resultNum AND (trajet.horaireDepart = $horaire)";
-                        
-                        $rowVerifUnique=$laConnexion->query($verifUnique);
-
-
-                        echo "rowverifunique = $rowVerifUnique<br>rsql $resultNum";
-                        if ($rowVerifUnique==0){
-                            $ordreSQLTraj="INSERT INTO trajet (dateTrajet, lieuDepart, lieuArrivee, horaireDepart)
-                                    VALUES ('$date', '$lieuDep', '$lieuArr', '$horaire')"; 
-                            $nb=$laConnexion->exec($ordreSQLTraj);
-                            if($nb==0){
-                                echo "Il y a eu une erreur dans l'insertions des données";
-                            }else{
-                                $idDernierTrajet = $laConnexion->lastInsertId();
-                                echo "<p>votre trajet a bien été ajouté</p>";
-                            }        
-                            $ordreSQLReserver="INSERT INTO reserver (numUtil, numTrajet) VALUE ($resultNum, $idDernierTrajet)";
-                            $laConnexion->exec($ordreSQLReserver);  
-                        } else { // explicit
-                            echo "<p>vous ne pouvez pas choisir deux trajets au même moment</p>";
-                       
-                        }
-                    } else {
-                        echo "<p>le compte en question n'existe pas</p>";
-                    }                        
-
-
-
-
+                       echo "<p>Votre trajet et votre réservation ont bien été enregistrés</p>";
+                   } catch (PDOException $e) {
+                       $laConnexion->rollBack();
+                       echo "Oups... Il y a eu une erreur : " . $e->getMessage();
+                   }
                 ?>
-                <script>
-                    console.log(<?php echo $rowVerifUnique ?>)
-                </script>
-            </div>       
+            </div>
         </div>            
     </div>
 </body>
